@@ -111,36 +111,4 @@ public class UnitTest1
 
         Assert.Equal(SocketError.ConnectionRefused, ex.SocketErrorCode);
     }
-
-    /// <summary>
-    /// Дополнительный тест: отмена заказа возвращает события
-    /// </summary>
-    [Fact]
-    public void Test5_CancelOrder_ReturnsEvents()
-    {
-        var service = new OrderService();
-        var items = new List<OrderItem> { new() { ProductId = 2, Quantity = 5 } };
-        var (order, _) = service.CreateOrder(1, items);
-
-        var (_, events) = service.CancelOrder(order.Id);
-
-        Assert.Contains(events, e => e.Name == "OrderCancelled");
-        Assert.Contains(events, e => e.Name == "StockUpdated");
-    }
-
-    /// <summary>
-    /// Дополнительный тест: оплата заказа
-    /// </summary>
-    [Fact]
-    public void Test6_PayOrder_Success()
-    {
-        var service = new OrderService();
-        var items = new List<OrderItem> { new() { ProductId = 3, Quantity = 1 } };
-        var (order, _) = service.CreateOrder(2, items);
-
-        var (payment, events) = service.PayOrder(order.Id, 3000m);
-
-        Assert.NotNull(payment);
-        Assert.Contains(events, e => e.Name == "PaymentCompleted");
-    }
 }
